@@ -1,0 +1,17 @@
+15a16,20
+>         if connection.host.endswith(':8080') and connection.host != 'localhost':
+>             href = self.collection.get('href')
+>             href = href.replace('https', 'http')
+>             href = href.replace('8080:8080', '8080')
+>             self.collection.set('href', href)
+114c119,122
+< 
+---
+> 	response = resp.content
+> 	if self.connection.host != 'localhost' and self.connection.host.endswith(':8080'):
+>             response = resp.content.replace("8080:8080", "8080")
+>             response = response.replace("https", "http")
+116c124
+<         dataset._refresh(receipt=resp.content)
+---
+>         dataset._refresh(receipt=response)

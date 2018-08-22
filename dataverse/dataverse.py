@@ -13,6 +13,11 @@ class Dataverse(object):
     def __init__(self, connection, collection):
         self.connection = connection
         self.collection = collection
+        if connection.host.endswith(':8080') and connection.host != 'localhost':
+            href = self.collection.get('href')
+            href = href.replace('https', 'http')
+            href = href.replace('8080:8080', '8080')
+            self.collection.set('href', href)
 
         self._collection_info = None
         self._contents_json = None
@@ -111,9 +116,12 @@ class Dataverse(object):
 
         if resp.status_code != 201:
             raise OperationFailedError('This dataset could not be added.')
-
+	response = resp.content
+	if self.connection.host != 'localhost' and self.connection.host.endswith(':8080'):
+            response = resp.content.replace("8080:8080", "8080")
+            response = response.replace("https", "http")
         dataset.dataverse = self
-        dataset._refresh(receipt=resp.content)
+        dataset._refresh(receipt=response)
         self.get_collection_info(refresh=True)
 
     def delete_dataset(self, dataset):

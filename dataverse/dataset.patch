@@ -1,0 +1,12 @@
+38a39,41
+>         if self.connection:
+>             self._fixURLs() 
+> 
+358a362,368
+> 
+>     def _fixURLs(self):
+>         if self.connection.host.endswith(':8080') and self.connection.host != 'localhost':
+>             self.edit_uri = self.edit_uri.replace('https', 'http')
+>             self.edit_uri = self.edit_uri.replace('8080:8080', '8080')
+>             self.edit_media_uri = self.edit_media_uri.replace('https', 'http')
+>             self.edit_media_uri = self.edit_media_uri.replace('8080:8080', '8080')

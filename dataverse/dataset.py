@@ -36,6 +36,9 @@ class Dataset(object):
         self.statement_uri = statement_uri
         self.is_deleted = False
 
+        if self.connection:
+            self._fixURLs() 
+
         self._entry = etree.XML(entry) if isinstance(entry, str) else entry
         self._statement = None
         self._metadata = {}
@@ -356,3 +359,10 @@ class Dataset(object):
         self.get_statement(refresh=True)
         self.get_entry(refresh=True)
         self.get_metadata('latest', refresh=True)
+
+    def _fixURLs(self):
+        if self.connection.host.endswith(':8080') and self.connection.host != 'localhost':
+            self.edit_uri = self.edit_uri.replace('https', 'http')
+            self.edit_uri = self.edit_uri.replace('8080:8080', '8080')
+            self.edit_media_uri = self.edit_media_uri.replace('https', 'http')
+            self.edit_media_uri = self.edit_media_uri.replace('8080:8080', '8080')
